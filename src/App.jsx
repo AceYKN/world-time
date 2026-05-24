@@ -195,6 +195,11 @@ function TopBar({
   );
 }
 
+function formatDrift(ms) {
+  const abs = Math.abs(ms);
+  return abs < 1000 ? `${abs} ms` : `${(abs / 1000).toFixed(1)} s`;
+}
+
 function ClockPanel({
   clock,
   selectedLocation,
@@ -202,6 +207,7 @@ function ClockPanel({
   offset,
   zoneName,
   anchor,
+  driftMs,
   onSync,
   onBlankClick,
 }) {
@@ -216,6 +222,10 @@ function ClockPanel({
     }).catch(() => {});
   }
 
+  const msIdx = clock.time.indexOf('.');
+  const mainTime = msIdx >= 0 ? clock.time.slice(0, msIdx) : clock.time;
+  const msSuffix = msIdx >= 0 ? clock.time.slice(msIdx) : '';
+
   return (
     <section className="clock-panel" onClick={onBlankClick}>
       <div className="clock-meta">
@@ -227,15 +237,27 @@ function ClockPanel({
       </div>
 
       <time
-        className={`clock-face ${clock.time.includes('.') ? 'has-ms' : ''}`}
+        className={`clock-face ${msSuffix ? 'has-ms' : ''}`}
         dateTime={new Date().toISOString()}
         aria-live="polite"
       >
-        <span>{clock.time}</span>
+        <span>
+          {mainTime}
+          {msSuffix && <span className="clock-ms">{msSuffix}</span>}
+        </span>
         {clock.period && <em>{clock.period}</em>}
       </time>
 
       <div className="date-line">{dateLine}</div>
+
+      {driftMs !== null && Math.abs(driftMs) >= 50 && (
+        <div className="drift-line">
+          <span>System clock</span>
+          <span className={driftMs > 0 ? 'drift-slow' : 'drift-fast'}>
+            {driftMs > 0 ? `▼ ${formatDrift(driftMs)} slow` : `▲ ${formatDrift(driftMs)} fast`}
+          </span>
+        </div>
+      )}
 
       <div className="source-line">
         <span>
@@ -316,12 +338,20 @@ function FocusClock({ clock, onExit }) {
     return () => window.removeEventListener('keydown', handleKey);
   }, [onExit]);
 
+  const msIdx = clock.time.indexOf('.');
+  const mainTime = msIdx >= 0 ? clock.time.slice(0, msIdx) : clock.time;
+  const msSuffix = msIdx >= 0 ? clock.time.slice(msIdx) : '';
+
   return (
     <main className="focus-stage" onClick={onExit}>
-      <time className={`focus-clock ${clock.time.includes('.') ? 'has-ms' : ''}`} aria-live="polite">
-        <span>{clock.time}</span>
+      <time className={`focus-clock ${msSuffix ? 'has-ms' : ''}`} aria-live="polite">
+        <span>
+          {mainTime}
+          {msSuffix && <span className="clock-ms">{msSuffix}</span>}
+        </span>
         {clock.period && <em>{clock.period}</em>}
       </time>
+      <p className="focus-hint">Click anywhere or press Esc to exit</p>
     </main>
   );
 }
@@ -349,6 +379,9 @@ export default function App() {
   const dateLine = formatDateLine(nowMs, selectedLocation.timeZone, language);
   const offset = formatOffset(nowMs, selectedLocation.timeZone);
   const zoneName = formatTimeZoneName(nowMs, selectedLocation.timeZone);
+  const driftMs = anchor.status === 'synced'
+    ? Math.round(anchor.epochMs - anchor.receivedAtMs)
+    : null;
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -404,6 +437,7 @@ export default function App() {
           offset={offset}
           zoneName={zoneName}
           anchor={anchor}
+          driftMs={driftMs}
           onSync={() => sync(new AbortController().signal)}
           onBlankClick={(event) => {
             if (event.currentTarget === event.target) {

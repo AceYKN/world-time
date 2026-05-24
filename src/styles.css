@@ -7,7 +7,7 @@
   --accent: #0f9b8e;
   --accent-strong: #067a70;
   --amber: #d88b00;
-  --radius: 8px;
+  --radius: 10px;
   --shadow: 0 22px 70px rgba(20, 40, 38, 0.12);
 }
 
@@ -280,6 +280,14 @@ button {
   font-size: 0.88rem;
 }
 
+:root[data-theme='black'] .select-shell select {
+  color-scheme: dark;
+}
+
+:root[data-theme='white'] .select-shell select {
+  color-scheme: light;
+}
+
 .icon-button {
   width: 2.65rem;
 }
@@ -287,7 +295,7 @@ button {
 .workspace {
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) minmax(24rem, 0.88fr);
-  gap: 1rem;
+  gap: 1.4rem;
   width: min(1360px, calc(100% - 2rem));
   margin: 0 auto;
   padding: 1rem 0 1.4rem;
@@ -321,6 +329,18 @@ button {
   border-radius: 999px;
   content: '';
   opacity: 0.38;
+  pointer-events: none;
+}
+
+.clock-panel::after {
+  position: absolute;
+  inset: auto -30rem -26rem auto;
+  width: 58rem;
+  height: 58rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 9%, transparent);
+  border-radius: 999px;
+  content: '';
+  opacity: 0.25;
   pointer-events: none;
 }
 
@@ -390,13 +410,39 @@ button {
   font-weight: 760;
 }
 
+.clock-ms {
+  display: inline-block;
+  min-width: 4.5ch;
+}
+
 .date-line {
   position: relative;
   z-index: 1;
   max-width: 48rem;
   color: var(--text);
   font-size: 1.45rem;
-  font-weight: 620;
+  font-weight: 600;
+}
+
+.drift-line {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.drift-slow {
+  color: var(--amber);
+  font-weight: 720;
+}
+
+.drift-fast {
+  color: var(--accent);
+  font-weight: 720;
 }
 
 .source-line {
@@ -467,6 +513,11 @@ button {
   to {
     transform: rotate(360deg);
   }
+}
+
+:root[data-theme='black'] .clock-face span,
+:root[data-theme='black'] .focus-clock span {
+  text-shadow: 0 0 60px color-mix(in srgb, var(--accent) 22%, transparent);
 }
 
 .map-panel {
@@ -623,11 +674,25 @@ button {
 }
 
 .focus-stage {
+  position: relative;
   display: grid;
   min-height: 100vh;
   place-items: center;
   padding: 1rem;
   background: var(--bg);
+}
+
+.focus-hint {
+  position: absolute;
+  bottom: 1.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  color: var(--faint);
+  font-size: 0.8rem;
+  opacity: 0.65;
+  pointer-events: none;
+  white-space: nowrap;
 }
 
 .focus-clock {
