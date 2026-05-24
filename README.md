@@ -18,3 +18,9 @@ npm run dev
 npm run build
 npm run deploy
 ```
+
+Automatic deploy:
+
+- Push to `main` to trigger GitHub Actions.
+- The workflow builds the site and publishes `dist` to the `gh-pages` branch.
+- In GitHub repository settings, make sure Pages is configured to deploy from the `gh-pages` branch.
