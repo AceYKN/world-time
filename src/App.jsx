@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  Check,
   Clock3,
+  Copy,
   Languages,
   MapPin,
   Moon,
@@ -103,7 +105,7 @@ function SearchBox({ selectedLocation, onSelect }) {
                   <strong>{location.city}</strong>
                   <span>{location.country}</span>
                 </span>
-                <code>{location.timeZone}</code>
+                <code>{formatOffset(Date.now(), location.timeZone)} · {location.region}</code>
               </button>
             ))
           )}
@@ -203,6 +205,17 @@ function ClockPanel({
   onSync,
   onBlankClick,
 }) {
+  const [copied, setCopied] = useState(false);
+
+  function handleCopy(event) {
+    event.stopPropagation();
+    const text = clock.period ? `${clock.time} ${clock.period}` : clock.time;
+    navigator.clipboard?.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {});
+  }
+
   return (
     <section className="clock-panel" onClick={onBlankClick}>
       <div className="clock-meta">
@@ -210,7 +223,7 @@ function ClockPanel({
           <MapPin size={16} aria-hidden="true" />
           {selectedLocation.city}, {selectedLocation.country}
         </span>
-        <span>{selectedLocation.timeZone}</span>
+        <span className="tz-badge">{selectedLocation.timeZone}</span>
       </div>
 
       <time
@@ -228,13 +241,23 @@ function ClockPanel({
         <span>
           {offset} · {zoneName}
         </span>
-        <button type="button" className="sync-button" onClick={(event) => {
-          event.stopPropagation();
-          onSync();
-        }}>
-          <RefreshCw size={15} aria-hidden="true" className={anchor.status === 'loading' ? 'spin' : ''} />
-          <span>{anchor.status === 'synced' ? 'timeapi.io' : anchor.status === 'loading' ? 'syncing' : 'browser'}</span>
-        </button>
+        <div className="source-actions">
+          <button
+            type="button"
+            className={`copy-button ${copied ? 'done' : ''}`}
+            onClick={handleCopy}
+          >
+            {copied ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
+            <span>{copied ? 'Copied!' : 'Copy'}</span>
+          </button>
+          <button type="button" className="sync-button" onClick={(event) => {
+            event.stopPropagation();
+            onSync();
+          }}>
+            <RefreshCw size={15} aria-hidden="true" className={anchor.status === 'loading' ? 'spin' : ''} />
+            <span>{anchor.status === 'synced' ? 'timeapi.io' : anchor.status === 'loading' ? 'syncing' : 'browser'}</span>
+          </button>
+        </div>
       </div>
     </section>
   );
@@ -285,6 +308,14 @@ function MapPanel({ selectedLocation, nowMs, hourMode, language, onSelect }) {
 }
 
 function FocusClock({ clock, onExit }) {
+  useEffect(() => {
+    function handleKey(event) {
+      if (event.key === 'Escape') onExit();
+    }
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [onExit]);
+
   return (
     <main className="focus-stage" onClick={onExit}>
       <time className={`focus-clock ${clock.time.includes('.') ? 'has-ms' : ''}`} aria-live="polite">
@@ -326,6 +357,17 @@ export default function App() {
   useEffect(() => {
     document.title = `${clock.time} ${selectedLocation.city} | World Time`;
   }, [clock.time, selectedLocation.city]);
+
+  useEffect(() => {
+    function handleKey(event) {
+      if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT') return;
+      if ((event.key === 'f' || event.key === 'F') && !event.metaKey && !event.ctrlKey) {
+        setFocusMode(true);
+      }
+    }
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, []);
 
   function selectLocation(location) {
     setSelectedId(location.id);

@@ -137,6 +137,11 @@ button {
   color: var(--muted);
 }
 
+.search-box:focus-within {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
 .search-results {
   position: absolute;
   top: calc(100% + 0.5rem);
@@ -339,6 +344,18 @@ button {
   font-weight: 720;
 }
 
+.tz-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.17rem 0.52rem;
+  border: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface-2) 80%, transparent);
+  color: var(--faint);
+  font-size: 0.75rem;
+  font-family: "SFMono-Regular", Consolas, monospace;
+}
+
 .clock-face {
   position: relative;
   z-index: 1;
@@ -358,7 +375,8 @@ button {
   font-size: 8.6rem;
   font-weight: 780;
   line-height: 0.92;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
 }
 
 .clock-face.has-ms span {
@@ -384,6 +402,34 @@ button {
 .source-line {
   justify-content: space-between;
   margin-top: 2.6rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+}
+
+.source-actions {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.copy-button {
+  display: inline-flex;
+  gap: 0.42rem;
+  align-items: center;
+  height: 2.35rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 720;
+  transition: border-color 140ms ease, color 140ms ease;
+}
+
+.copy-button.done {
+  border-color: color-mix(in srgb, var(--accent) 46%, var(--border));
+  color: var(--accent);
 }
 
 .sync-button {
@@ -398,11 +444,19 @@ button {
 }
 
 .sync-button:hover,
+.copy-button:hover,
 .icon-button:hover,
 .tool-button:hover,
 .segmented button:hover,
 .select-shell:focus-within {
   border-color: color-mix(in srgb, var(--accent) 48%, var(--border));
+}
+
+.sync-button,
+.icon-button,
+.tool-button,
+.segmented button {
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
 }
 
 .spin {
@@ -428,6 +482,8 @@ button {
   align-items: center;
   justify-content: space-between;
   min-height: 2.4rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
   color: var(--muted);
   font-size: 0.86rem;
   font-weight: 720;
@@ -520,12 +576,18 @@ button {
   background: var(--surface);
   color: var(--text);
   text-align: left;
+  transition: background-color 140ms ease, border-color 140ms ease;
 }
 
 .city-row:hover,
-.city-row:focus-visible,
+.city-row:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 52%, var(--border));
+  outline: 0;
+}
+
 .city-row.active {
   border-color: color-mix(in srgb, var(--accent) 52%, var(--border));
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
   outline: 0;
 }
 
@@ -555,7 +617,9 @@ button {
 .city-row time {
   flex: 0 0 auto;
   color: var(--accent);
+  font-size: 1rem;
   font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 
 .focus-stage {
@@ -585,7 +649,8 @@ button {
   font-size: 11rem;
   font-weight: 800;
   line-height: 0.9;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
 }
 
 .focus-clock.has-ms span {
