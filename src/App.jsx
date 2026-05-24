@@ -241,7 +241,7 @@ function ClockPanel({
         dateTime={new Date().toISOString()}
         aria-live="polite"
       >
-        <span>
+        <span className="clock-main">
           {mainTime}
           {msSuffix && <span className="clock-ms">{msSuffix}</span>}
         </span>
@@ -345,7 +345,7 @@ function FocusClock({ clock, onExit }) {
   return (
     <main className="focus-stage" onClick={onExit}>
       <time className={`focus-clock ${msSuffix ? 'has-ms' : ''}`} aria-live="polite">
-        <span>
+        <span className="clock-main">
           {mainTime}
           {msSuffix && <span className="clock-ms">{msSuffix}</span>}
         </span>
