@@ -1,4 +1,54 @@
-export const locations = [
+const countryCodes = {
+  Taiwan: 'TW',
+  Japan: 'JP',
+  'South Korea': 'KR',
+  China: 'CN',
+  'Hong Kong': 'HK',
+  Singapore: 'SG',
+  Thailand: 'TH',
+  Indonesia: 'ID',
+  Philippines: 'PH',
+  Vietnam: 'VN',
+  Malaysia: 'MY',
+  India: 'IN',
+  'United Arab Emirates': 'AE',
+  'Saudi Arabia': 'SA',
+  Israel: 'IL',
+  Iran: 'IR',
+  'United Kingdom': 'GB',
+  Ireland: 'IE',
+  France: 'FR',
+  Germany: 'DE',
+  Spain: 'ES',
+  Italy: 'IT',
+  Netherlands: 'NL',
+  Sweden: 'SE',
+  Finland: 'FI',
+  Turkey: 'TR',
+  Greece: 'GR',
+  Russia: 'RU',
+  'United States': 'US',
+  Canada: 'CA',
+  Mexico: 'MX',
+  Colombia: 'CO',
+  Peru: 'PE',
+  Chile: 'CL',
+  Argentina: 'AR',
+  Brazil: 'BR',
+  Iceland: 'IS',
+  Morocco: 'MA',
+  Egypt: 'EG',
+  Nigeria: 'NG',
+  Kenya: 'KE',
+  'South Africa': 'ZA',
+  Ethiopia: 'ET',
+  Australia: 'AU',
+  'New Zealand': 'NZ',
+  Fiji: 'FJ',
+  Samoa: 'WS',
+};
+
+const baseLocations = [
   { id: 'taipei', city: 'Taipei', country: 'Taiwan', timeZone: 'Asia/Taipei', lat: 25.033, lng: 121.565, region: 'Asia' },
   { id: 'tokyo', city: 'Tokyo', country: 'Japan', timeZone: 'Asia/Tokyo', lat: 35.676, lng: 139.65, region: 'Asia' },
   { id: 'seoul', city: 'Seoul', country: 'South Korea', timeZone: 'Asia/Seoul', lat: 37.566, lng: 126.978, region: 'Asia' },
@@ -59,6 +109,11 @@ export const locations = [
   { id: 'samoa', city: 'Apia', country: 'Samoa', timeZone: 'Pacific/Apia', lat: -13.85, lng: -171.751, region: 'Pacific' },
   { id: 'utc', city: 'UTC', country: 'Coordinated Universal Time', timeZone: 'UTC', lat: 0, lng: 0, region: 'Reference' },
 ];
+
+export const locations = baseLocations.map((location) => ({
+  ...location,
+  countryCode: countryCodes[location.country] ?? null,
+}));
 
 export const featuredLocationIds = [
   'taipei',

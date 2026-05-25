@@ -23,6 +23,7 @@ import {
   formatShortTime,
   formatTimeZoneName,
 } from './lib/timeFormat.js';
+import CountryFlag from './components/CountryFlag.jsx';
 
 const fallbackLocation = locations.find((location) => location.id === defaultLocationId) ?? locations[0];
 
@@ -101,9 +102,12 @@ function SearchBox({ selectedLocation, onSelect }) {
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => choose(location)}
               >
-                <span>
-                  <strong>{location.city}</strong>
-                  <span>{location.country}</span>
+                <span className="search-result-main">
+                  <CountryFlag countryCode={location.countryCode} className="country-flag-search" />
+                  <span className="search-result-copy">
+                    <strong>{location.city}</strong>
+                    <span>{location.country}</span>
+                  </span>
                 </span>
                 <code>{formatOffset(Date.now(), location.timeZone)} · {location.region}</code>
               </button>
@@ -231,6 +235,7 @@ function ClockPanel({
       <div className="clock-meta">
         <span className="location-chip">
           <MapPin size={16} aria-hidden="true" />
+          <CountryFlag countryCode={selectedLocation.countryCode} />
           {selectedLocation.city}, {selectedLocation.country}
         </span>
         <span className="tz-badge">{selectedLocation.timeZone}</span>
@@ -299,8 +304,11 @@ function CityRail({ nowMs, selectedLocation, hourMode, language, onSelect }) {
           className={`city-row ${location.id === selectedLocation.id ? 'active' : ''}`}
           onClick={() => onSelect(location)}
         >
-          <span>
-            <strong>{location.city}</strong>
+          <span className="city-row-meta">
+            <span className="city-row-title">
+              <CountryFlag countryCode={location.countryCode} className="country-flag-city" />
+              <strong>{location.city}</strong>
+            </span>
             <small>{formatOffset(nowMs, location.timeZone)}</small>
           </span>
           <time>{formatShortTime(nowMs, location.timeZone, { hourMode, language })}</time>

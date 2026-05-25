@@ -174,13 +174,32 @@ button {
   justify-content: space-between;
 }
 
+.search-result-main {
+  display: flex;
+  min-width: 0;
+  gap: 0.7rem;
+  align-items: center;
+}
+
+.search-result-copy {
+  min-width: 0;
+}
+
+.search-result-copy strong,
+.search-result-copy span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .search-result:hover,
 .search-result:focus-visible {
   background: var(--surface-2);
   outline: 0;
 }
 
-.search-result span span,
+.search-result-copy span,
 .search-empty {
   display: block;
   margin-top: 0.15rem;
@@ -432,6 +451,39 @@ button {
   align-items: center;
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+.country-flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  font-size: 1.08rem;
+  line-height: 1;
+}
+
+.country-flag-emoji {
+  display: block;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  height: auto;
+  transform: translateY(0.02em);
+}
+
+.country-flag-fallback {
+  display: block;
+  width: 1.2em;
+  height: auto;
+  overflow: hidden;
+  border-radius: 0.22em;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--border) 72%, transparent);
+}
+
+.country-flag-search {
+  font-size: 1.22rem;
+}
+
+.country-flag-city {
+  font-size: 0.98rem;
 }
 
 .location-chip {
@@ -720,6 +772,17 @@ button {
   border-color: color-mix(in srgb, var(--accent) 52%, var(--border));
   background: color-mix(in srgb, var(--accent) 8%, var(--surface));
   outline: 0;
+}
+
+.city-row-meta {
+  min-width: 0;
+}
+
+.city-row-title {
+  display: flex;
+  min-width: 0;
+  gap: 0.55rem;
+  align-items: center;
 }
 
 .city-row span {
